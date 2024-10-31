@@ -1,9 +1,16 @@
 {
     "name": "andreaz/search-table",
     "description": "Easy to use models table",
+    "keywords": [
+        "Andrea Zorzi",
+        "laravel",
+        "laravel-search-table",
+        "search-table"
+    ],
+    "homepage": "https://github.com/andreaz/search-table",
     "autoload": {
         "psr-4": {
-            "Andreaz\\SearchTable\\": "src/"
+            "SearchTable\\": "src/"
         }
     },
     "authors": [
@@ -12,5 +19,19 @@
             "email": "info@zorziandrea.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SearchTable\\SearchTableServiceProvider"
+            ],
+            "aliases": {
+                "SearchTable": "SearchTable\\Facades\\SearchTable"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": false
 }
