@@ -1,0 +1,16 @@
+{
+    "name": "andreaz/search-table",
+    "description": "Easy to use models table",
+    "autoload": {
+        "psr-4": {
+            "Andreaz\\SearchTable\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrea Zorzi",
+            "email": "info@zorziandrea.com"
+        }
+    ],
+    "require": {}
+}
