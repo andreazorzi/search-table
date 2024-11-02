@@ -1,6 +1,7 @@
 <?php
 
 namespace SearchTable\Classes;
+use Illuminate\Support\Facades\View;
 
 class Help
 {
@@ -17,4 +18,9 @@ class Help
         
         return true;
     }
+	
+	// Get view ragment
+	public static function fragment(string $view, string $fragment, array $data = []):string{
+		return View::make($view, array_merge($data, ["fragment" => true]))->fragment($fragment);
+	}
 }
