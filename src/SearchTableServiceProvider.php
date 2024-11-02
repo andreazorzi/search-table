@@ -19,7 +19,16 @@ class SearchTableServiceProvider extends PackageServiceProvider
             // ->hasConfigFile('searchtable')
             ->hasCommands([
                 
-            ]);
+            ])
+            ->hasViews();
+    }
+    
+    public function boot()
+    {
+        parent::boot();
+
+        // Load package views
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'search-table');
     }
 
 }
