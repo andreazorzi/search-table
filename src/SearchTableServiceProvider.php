@@ -16,7 +16,7 @@ class SearchTableServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('search-table')
-            // ->hasConfigFile('searchtable')
+            ->hasConfigFile('searchtable')
             ->hasCommands([
                 
             ])

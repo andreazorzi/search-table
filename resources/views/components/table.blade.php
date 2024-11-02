@@ -14,7 +14,7 @@
 	$advanced_values ??= [];
 	$modelfilter ??= [];
 	$page ??= 1;
-	$limit ??= 15;
+	$limit ??= config("searchtable.limit");
 	$disableaddbutton ??= false;
 	$disablesearchbar ??= false;
 	$disabletotalrow ??= false;
