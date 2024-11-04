@@ -30,8 +30,6 @@ trait SearchModel
             if(!empty($field["sort"])){
                 $model_sort[] = ($field["custom-filter"] ?? $key)." ".$field["sort"];
             }
-            
-            if(empty($field["filter"])) continue;
                 
             if(!empty($advanced[$key])){
                 if(($field["advanced-type"] ?? null) == "date-range"){
@@ -48,7 +46,7 @@ trait SearchModel
                         $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE '%".$value."%'";
                     }
                     
-                    $filter[] = "(".implode(" AND ", $multi_filter).")";
+                    $filter[] = "(".implode(" ".($advanced["filter_operators"][$key] ?? "AND")." ", $multi_filter).")";
                 }
                 else if(($field["advanced-type"] ?? null) == "like"){
                     $filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE '%".$advanced[$key]."%'";
@@ -64,7 +62,7 @@ trait SearchModel
                     $filter[] = "(".implode(" OR ", $multi_filter).")";
                 }
             }
-            else if(Help::empty_dictionary($advanced)){
+            else if(!empty($field["filter"]) && Help::empty_dictionary($advanced)){
                 $filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE ?";
                 $filter_values[] = "%".$query."%";
             }
