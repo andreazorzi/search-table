@@ -1,5 +1,6 @@
 # SearchTable
-Add a searchable model table to your view. All the request are made via [htmx](https://htmx.org/docs/).
+Add a searchable model table to your view.
+The package is based on [Bootstrap 5](https://getbootstrap.com/) for the table UI and [htmx](https://htmx.org/docs/) for all the requests.
 
 ## Installation
 ```bash
@@ -137,3 +138,46 @@ To include the SearchTable components, you can simply add the following code in 
 - disableaddbutton (optional): disable or enable the add button (call the Controller::create function)
 - disablesearchbar (optional): disable or enable the search bar
 - disabletotalrow (optional): disable or enable the totals row
+- showadvancefilters (optional): enable or disable the advanced filters
+
+### Advanced filters
+To enable the advanced filters, you have to create a blade under `resources/views/components/search-table-filters/models-filters.blade.php`.
+The content of the blade should be like this:
+```html
+@use(App\Models\User)
+<div class="col-md-4">
+    <label>Status</label>
+    <select class="selectize" multiple name="advanced_search[enabled][]">
+        @foreach (["Disabled", "Enabled"] as $key => $value)
+            <option value="{{$key}}">{{$value}}</option>
+        @endforeach
+    </select>
+</div>
+<div class="col-md-4">
+    <label>Tipo</label>
+    <select class="selectize" multiple name="advanced_search[type][]">
+        @foreach (User::groupBy("type")->pluck("type")->toArray() as $type)
+            <option>{{$type}}</option>
+        @endforeach
+    </select>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(".selectize").selectize({
+            plugins: ["remove_button"],
+            onChange: function(value) {
+                $("#page").val(1);
+                htmx.trigger("#page", "change");
+            },
+            onDropdownOpen: function() {
+                for (const select of $(".selectize.selectized")) {
+                    if(select !== this.$input[0]){
+                        select.selectize.close();
+                    }
+                }
+            }
+        });
+    });
+</script>
+```
