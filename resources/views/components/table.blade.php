@@ -120,12 +120,12 @@
 								<td class="text-end">
 									@foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
 										@isset($action["url"])
-											<a href="{{$action["url"]}}" class="d-inline-block ms-3 text-decoration-none text-black" title="{{$action["title"]}}" {!!$action["custom-attributes"]!!}>
-												{!!$action["icon"]!!}
+											<a class="d-inline-block ms-3 text-decoration-none text-black" {!!$action["attributes"]!!}>
+												{!!$action["content"]!!}
 											</a>
 										@else
-											<span role="button" class="d-inline-block ms-3" {!!$action["custom-attributes"]!!}>
-												{!!$action["icon"]!!}
+											<span class="d-inline-block ms-3" title="{{$action["title"] ?? ""}}" {!!$action["attributes"]!!} role="button">
+												{!!$action["content"]!!}
 											</span>
 										@endisset
 									@endforeach
