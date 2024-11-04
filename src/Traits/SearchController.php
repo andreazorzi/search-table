@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Traits;
+namespace SearchTable\Traits;
 
 use SearchTable\Classes\Help;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-trait ControllerBase
+trait SearchController
 {
-    private static function modal_data($model, $data = []){
-        return View::make("components.backoffice.modals.$model-data", $data);
+    static public $model;
+    
+    public function index(Request $request){
+        $class = "App\Models\\".str_replace("Controller", "", class_basename($this));
+        
+        return self::search_table($request, new $class);
     }
     
     private static function search_table(Request $request, $model){
-        return Help::fragment("components.search-table", "search-table-body", [
+        return Help::fragment("search-table::components.table", "search-table-body", [
             "model" => $model,
             "query" => $request->filter,
             "advanced" => $request->advanced_search,
