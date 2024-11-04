@@ -4,7 +4,6 @@ namespace SearchTable\Traits;
 
 use SearchTable\Classes\Help;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 
 trait SearchController
 {
