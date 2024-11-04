@@ -1038,12 +1038,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "181008d4c56603929479ca287ddd4e39e58c1b8b"
+                "reference": "440243fba1f32ebb55a03d8665087c43ff5f5014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/181008d4c56603929479ca287ddd4e39e58c1b8b",
-                "reference": "181008d4c56603929479ca287ddd4e39e58c1b8b",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/440243fba1f32ebb55a03d8665087c43ff5f5014",
+                "reference": "440243fba1f32ebb55a03d8665087c43ff5f5014",
                 "shasum": ""
             },
             "require": {
@@ -1106,7 +1106,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-11-01T13:34:42+00:00"
+            "time": "2024-11-03T21:00:34+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1114,12 +1114,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "5040f2911da70932682ea64895e0ca8e80c21078"
+                "reference": "10ac0aa86b8062219ce21e8189123d611ca3ecd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/5040f2911da70932682ea64895e0ca8e80c21078",
-                "reference": "5040f2911da70932682ea64895e0ca8e80c21078",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/10ac0aa86b8062219ce21e8189123d611ca3ecd9",
+                "reference": "10ac0aa86b8062219ce21e8189123d611ca3ecd9",
                 "shasum": ""
             },
             "require": {
@@ -1213,7 +1213,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-16T21:23:18+00:00"
+            "time": "2024-11-03T16:02:24+00:00"
         },
         {
             "name": "psr/clock",
@@ -2183,12 +2183,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "735b8519a8bcbf603d3af0430fb1be5c8822af13"
+                "reference": "cddd58bf2244f1022f49260a8886817f5a1f433f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/735b8519a8bcbf603d3af0430fb1be5c8822af13",
-                "reference": "735b8519a8bcbf603d3af0430fb1be5c8822af13",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/cddd58bf2244f1022f49260a8886817f5a1f433f",
+                "reference": "cddd58bf2244f1022f49260a8886817f5a1f433f",
                 "shasum": ""
             },
             "require": {
@@ -2253,7 +2253,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-23T06:56:12+00:00"
+            "time": "2024-11-03T20:37:44+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -3274,6 +3274,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "illuminate/support": 20,
         "illuminate/http": 20
     },
     "prefer-stable": false,
