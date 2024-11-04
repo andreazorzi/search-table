@@ -123,6 +123,10 @@ The examples below matches the examples above.
     // Model relationship
     "cutom-filter" => "(SELECT d.name FROM departments d WHERE d.id = department_id)"
     ```
+- advanced-type: this parameter change the attribute type when parsing the advanced filters, below the available types:
+    - date-range (the value of the filter must be a valid date format, "Y-m-d - Y-m-d" or "Y-m-d")
+    - in-array (the value of the attribute must be a comma separeted text, useful in combination between custom filter and a many to many relationship)
+    - like (match the like "%filte%" confition)
 - hidden: set this parameter to `true` to prevent the attribute's column to be displayed, for example sorting the table by model id without display it.
     ```php
     "filter" => true
@@ -154,12 +158,31 @@ The content of the blade should be like this:
     </select>
 </div>
 <div class="col-md-4">
-    <label>Tipo</label>
+    <label>Type</label>
     <select class="selectize" multiple name="advanced_search[type][]">
         @foreach (User::groupBy("type")->pluck("type")->toArray() as $type)
             <option>{{$type}}</option>
         @endforeach
     </select>
+</div>
+
+<!-- Many to many relationship filter -->
+<div class="col-md-4">
+    <label>Groups</label>
+    <div class="input-group">
+        <span class="input-group-text">
+            <!-- Filter operators to change the Eloquent filter operator -->
+            <select class="advance-filter form-control p-0 border-0 bg-transparent" name="advanced_search[filter_operators][groups]">
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+        </span>
+        <select class="selectize" multiple name="advanced_search[groups][]">
+            @foreach (Group::get()->toArray() as $group)
+                <option value="{{$group->id}}">{{$group->name}}</option>
+            @endforeach
+        </select>
+    </div>
 </div>
 
 <script>
