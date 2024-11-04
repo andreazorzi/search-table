@@ -52,7 +52,7 @@
 									@empty($disablesearchbar)
 										{{-- Filter input --}}
 										<div class="col align-self-center">
-											<input type="text" id="filter" name="filter" class="form-control p-1" placeholder="Cerca" data-value=""
+											<input type="text" id="filter" name="filter" class="form-control p-1" value="{{$query}}" placeholder="Cerca" 
 												hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search']"
 												hx-vals='{{json_encode(array_merge($modelfilter, ["disableaddbutton" => $disableaddbutton, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow]))}}'
 												>
@@ -120,7 +120,7 @@
 								<td class="text-end">
 									@foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
 										@isset($action["url"])
-											<a class="d-inline-block ms-3 text-decoration-none text-black" {!!$action["attributes"]!!}>
+											<a class="d-inline-block ms-3 text-decoration-none text-black" {!!$action["attributes"] ?? ""!!}>
 												{!!$action["content"]!!}
 											</a>
 										@else
