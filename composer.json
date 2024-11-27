@@ -1,5 +1,5 @@
 {
-    "name": "andreaz/search-table",
+    "name": "andreazorzi/search-table",
     "description": "Easy to use models table",
     "keywords": [
         "Andrea Zorzi",
@@ -7,7 +7,7 @@
         "laravel-search-table",
         "search-table"
     ],
-    "homepage": "https://github.com/andreaz/search-table",
+    "homepage": "https://github.com/andreazorzi/search-table",
     "autoload": {
         "psr-4": {
             "SearchTable\\": "src/"
