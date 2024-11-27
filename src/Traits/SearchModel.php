@@ -28,7 +28,7 @@ trait SearchModel
         
         foreach($fields as $key => $field){
             if(!empty($field["sort"])){
-                $model_sort[] = ($field["custom-filter"] ?? $key)." ".$field["sort"];
+                $model_sort[] = ($field["custom-filter"] ?? "`".$key."`")." ".$field["sort"];
             }
                 
             if(!empty($advanced[$key])){
