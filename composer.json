@@ -8,6 +8,7 @@
         "search-table"
     ],
     "homepage": "https://github.com/andreazorzi/search-table",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "SearchTable\\": "src/"
