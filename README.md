@@ -1,4 +1,7 @@
 # SearchTable
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/andreazorzi/search-table.svg?style=flat-square)](https://packagist.org/packages/andreazorzi/search-table)
+[![Total Downloads](https://img.shields.io/packagist/dt/andreazorzi/search-table.svg?style=flat-square)](https://packagist.org/packages/andreazorzi/search-table)
+
 Add a searchable model table to your view.
 The package is based on [Bootstrap 5](https://getbootstrap.com/) for the table UI and [htmx](https://htmx.org/docs/) for all the requests.
 
