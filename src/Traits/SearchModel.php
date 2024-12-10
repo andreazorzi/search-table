@@ -35,7 +35,7 @@ trait SearchModel
                 if(($field["advanced-type"] ?? null) == "date-range"){
                     $dates = explode(" - ", $advanced[$key]);
                     
-                    $filter[] = ($field["custom-filter"] ?? $key)." BETWEEN ? AND ?";
+                    $filter[] = ($field["custom-filter"] ?? "`".$key."`")." BETWEEN ? AND ?";
                     $advanced_values[] = Help::convert_date($dates[0]);
                     $advanced_values[] = Help::convert_date($dates[1] ?? $dates[0]);
                 }
@@ -43,19 +43,19 @@ trait SearchModel
                     $multi_filter = [];
                     
                     foreach($advanced[$key] as $value){
-                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE '%".$value."%'";
+                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$value."%'";
                     }
                     
                     $filter[] = "(".implode(" ".($advanced["filter_operators"][$key] ?? "AND")." ", $multi_filter).")";
                 }
                 else if(($field["advanced-type"] ?? null) == "like"){
-                    $filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE '%".$advanced[$key]."%'";
+                    $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$advanced[$key]."%'";
                 }
                 else{
                     $multi_filter = [];
                     
                     foreach($advanced[$key] as $value){
-                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') = ?";
+                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') = ?";
                         $advanced_values[] = $value;
                     }
                     
@@ -63,7 +63,7 @@ trait SearchModel
                 }
             }
             else if(!empty($field["filter"]) && Help::empty_dictionary($advanced)){
-                $filter[] = "CONVERT(".($field["custom-filter"] ?? $key)." using 'utf8') LIKE ?";
+                $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE ?";
                 $filter_values[] = "%".$query."%";
             }
         }
@@ -73,7 +73,7 @@ trait SearchModel
         
         // Check model filter
         foreach($modelfilter as $key => $value){
-            $search = $search->whereRaw("CONVERT(".($fields[$key]["custom-filter"] ?? $fields[$key]["key"] ?? $key)." using 'utf8') = ?", $value);
+            $search = $search->whereRaw("CONVERT(".($fields[$key]["custom-filter"] ?? $fields[$key]["key"] ?? "`".$key."`")." using 'utf8') = ?", $value);
         }
         
         if($sort){
