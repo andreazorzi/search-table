@@ -85,13 +85,13 @@ At least one attribute must have the sort parameter.
     ```
 - custom-label: this parameter accept a string to be displayed in the table header, otherwise it will search the attribute label in the `lang/validation.php` file under the `attributes` key.
     ```php
-    "cutom-label" => "First Name"
+    "custom-label" => "First Name"
     ```
 - custom-value: this parameter is used to display a custom value for an attribute.
 The parameter value must be a model's function string name.
     ```php
     // Merging multiple attributes
-    "cutom-label" => "getUserFullName"
+    "custom-label" => "getUserFullName"
     
     public function getUserFullName(){
         return $this->fisrt_name." ".$this->last_name;
@@ -99,7 +99,7 @@ The parameter value must be a model's function string name.
     
     
     // Data manipulation
-    "cutom-label" => "getStatusText"
+    "custom-label" => "getStatusText"
     
     public function getStatusText(){
         $statuses = ["New", "In Progress", "Finished"];
@@ -108,7 +108,7 @@ The parameter value must be a model's function string name.
     
     
     // Model relationship
-    "cutom-label" => "getDepartmentName"
+    "custom-label" => "getDepartmentName"
     
     public function getDepartmentName(){
         return $this->department->name;
@@ -118,13 +118,13 @@ The parameter value must be a model's function string name.
 The examples below matches the examples above.
     ```php
     // Merged attributes
-    "cutom-filter" => "CONCAT(first_name, ' ', last_name)"
+    "custom-filter" => "CONCAT(first_name, ' ', last_name)"
     
     // Manipulated data
-    "cutom-filter" => "CASE WHEN status = 0 THEN 'New' WHEN status = 1 THEN 'In Progress' ELSE 'Finished' END"
+    "custom-filter" => "CASE WHEN status = 0 THEN 'New' WHEN status = 1 THEN 'In Progress' ELSE 'Finished' END"
     
     // Model relationship
-    "cutom-filter" => "(SELECT d.name FROM departments d WHERE d.id = department_id)"
+    "custom-filter" => "(SELECT d.name FROM departments d WHERE d.id = department_id)"
     ```
 - advanced-type: this parameter change the attribute type when parsing the advanced filters, below the available types:
     - date-range (the value of the filter must be a valid date format, "Y-m-d - Y-m-d" or "Y-m-d")
