@@ -19,6 +19,7 @@
     $disablesearchbar ??= false;
     $disabletotalrow ??= false;
     $showadvancefilters ??= false;
+    $fit ??= false;
     
     // Get model primary key
     $model_key = $model::getModelKey();
@@ -59,7 +60,7 @@
 @endif
 <div class="row justify-content-center mt-3">
     <div class="col-md-{{$size ?? 8}}">
-        <table class="{{$model_plural}}-table table-search table table-hover table-striped">
+        <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}}">
             {{-- Table header --}}
             <thead class="table-dark">
                 @if (!($disablesearchbar ?? false) || !($disableaddbutton ?? false))
@@ -246,3 +247,16 @@
         }
     }, false);
 </script>
+
+<style>
+    .table-fit{
+        td, th{
+            
+            &:not(:last-child){
+                width: 1%;
+                padding-right: 20px;
+                white-space: nowrap;
+            }
+        }
+    }
+</style>
