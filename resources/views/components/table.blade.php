@@ -73,7 +73,7 @@
                                         <div class="col align-self-center">
                                             <input type="text" id="filter" name="filter" class="form-control p-1" value="{{$query}}" placeholder="Cerca" 
                                                 hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search']"
-                                                hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
+                                                hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
                                                 >
                                         </div>
                                     @endempty
@@ -89,7 +89,7 @@
                                                 <i role="button" id="add-new-{{$model_name}}" class="add-new fa-solid fa-plus pe-2"
                                                     data-bs-target="#modal" data-bs-toggle="modal"
                                                     hx-get="{{route($model_plural.".create", [])}}" hx-target="#modal .modal-content"
-                                                    hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
+                                                    hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
                                                     ></i>
                                             @endif
                                         </div>
@@ -205,7 +205,7 @@
                                     <input type="hidden" name="advanced_search[blank]" value="">
                                     <input type="text" id="page" name="page" class="table-page" value="{{$page}}"
                                         hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed, change" hx-target="#{{$model_plural}}-table-data" hx-include="[name='filter'],[name^='advanced_search']"
-                                        hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
+                                        hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow])}}'
                                         >
                                     /
                                     <span id="last-page">{{ceil($count->count() / $limit)}}</span>

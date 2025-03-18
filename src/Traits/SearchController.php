@@ -21,6 +21,7 @@ trait SearchController
             "query" => $request->filter,
             "advanced" => $request->advanced_search,
             "page" => $request->page ?? 1,
+            "addRedirect" => $request->addRedirect ?? null,
             "modelfilter" => json_decode($request->modelfilter ?? "[]"),
             "disableaddbutton" => $request->boolean("disableaddbutton") ?? false,
             "disablesearchbar" => $request->boolean("disablesearchbar") ?? false,
