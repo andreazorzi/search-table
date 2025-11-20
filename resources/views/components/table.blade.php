@@ -136,7 +136,7 @@
                             
                             @if (method_exists($model, "getTableActions") && count($model_obj->getTableActions($model_plural, $model->{$model_key})) > 0)
                                 {{-- Model edit button --}}
-                                <td class="text-end">
+                                <td class="text-end text-nowrap">
                                     @foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
                                         @continue(is_null($action))
                                         @isset($action["url"])
