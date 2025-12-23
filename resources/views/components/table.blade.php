@@ -46,15 +46,25 @@
 @if(!empty($showadvancefilters))
     <div class="row justify-content-center">
         <div class="col-md-{{$size ?? 8}}">
-            <div class="col-md-12 text-end">
-                <button class="btn btn-primary btn-sm" onclick="$('#advanced-search').toggleClass('d-none')">
-                    <i class="fa-brands fa-searchengin"></i>
-                    Ricerca Avanzata
-                </button>
-            </div>
-            <div id="advanced-search" class="row gy-2 d-none">
+            @if($showadvancefilters != "offcanvas")
+                <div class="text-end">
+                    <button class="btn btn-primary btn-sm" onclick="$('#advanced-search').toggleClass('d-none')">
+                        <i class="fa-brands fa-searchengin"></i>
+                        {{__('search-table::search-table.advanced_search')}}
+                    </button>
+                </div>
+                <div id="advanced-search" class="row gy-2 d-none">
+                    @include("components.search-table-filters.$model_plural-filters")
+                </div>
+            @else
+                <div class="text-end">
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#filters" role="button" aria-controls="filters">
+                        <i class="fa-brands fa-searchengin"></i>
+                        {{__('search-table::search-table.advanced_search')}}
+                    </button>
+                </div>
                 @include("components.search-table-filters.$model_plural-filters")
-            </div>
+            @endif
         </div>
     </div>
 @endif

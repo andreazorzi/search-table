@@ -29,6 +29,9 @@ class SearchTableServiceProvider extends PackageServiceProvider
 
         // Load package views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'search-table');
+        
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'search-table');
     }
 
 }
