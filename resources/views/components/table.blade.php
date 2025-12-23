@@ -53,7 +53,7 @@
                         {{__('search-table::search-table.advanced_search')}}
                     </button>
                 </div>
-                <div id="advanced-search" class="row gy-2 d-none">
+                <div id="advanced-search" class="row gy-2">
                     @include("components.search-table-filters.$model_plural-filters")
                 </div>
             @else

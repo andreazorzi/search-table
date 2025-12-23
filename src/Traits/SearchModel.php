@@ -23,61 +23,61 @@ trait SearchModel
         $query = $filters["query"] ?? "";
         $advanced = $filters["advanced_search"] ?? [];
         $modelfilter = $filters["modelfilter"] ?? [];
-	    $advanced_values = [];
         $fields = self::getTableFields();
         
-        foreach($fields as $key => $field){
-            if(!empty($field["sort"])){
-                $model_sort[] = ($field["custom-filter"] ?? "`".$key."`")." ".$field["sort"];
-            }
-                
-            if(!empty($advanced[$key])){
-                if(($field["advanced-type"] ?? null) == "date-range"){
-                    $dates = explode(" - ", $advanced[$key]);
-                    
-                    $filter[] = ($field["custom-filter"] ?? "`".$key."`")." BETWEEN ? AND ?";
-                    $advanced_values[] = Help::convert_date($dates[0]);
-                    $advanced_values[] = Help::convert_date($dates[1] ?? $dates[0]);
-                }
-                else if(($field["advanced-type"] ?? null) == "in-array"){
-                    $multi_filter = [];
-                    
-                    foreach($advanced[$key] as $value){
-                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$value."%'";
-                    }
-                    
-                    $filter[] = "(".implode(" ".($advanced["filter_operators"][$key] ?? "AND")." ", $multi_filter).")";
-                }
-                else if(($field["advanced-type"] ?? null) == "like"){
-                    $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$advanced[$key]."%'";
-                }
-                else{
-                    $multi_filter = [];
-                    
-                    foreach($advanced[$key] as $value){
-                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') = ?";
-                        $advanced_values[] = $value;
-                    }
-                    
-                    $filter[] = "(".implode(" OR ", $multi_filter).")";
-                }
-            }
-            else if(!empty($field["filter"]) && Help::empty_dictionary($advanced)){
-                $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE ?";
-                $filter_values[] = "%".$query."%";
-            }
-        }
-        
-        // Perform model search
-        $search = !empty($filter) ? self::whereRaw("(".implode(Help::empty_dictionary($advanced) ? " OR " : " AND ", $filter).")", !Help::empty_dictionary($advanced) ? $advanced_values : $filter_values) : self::query();
+        $search = self::query();
         
         // Check model filter
         foreach($modelfilter as $key => $value){
             $search = $search->whereRaw("CONVERT(".($fields[$key]["custom-filter"] ?? $fields[$key]["key"] ?? "`".$key."`")." using 'utf8') = ?", $value);
         }
         
-        if($sort){
-            $search->orderByRaw(implode(",", $model_sort));
+        foreach($fields as $key => $field){
+            if(!empty($field["sort"])){
+                $search = $search->orderByRaw(($field["custom-filter"] ?? "`".$key."`")." ".$field["sort"]);
+            }
+                
+            if(!empty($advanced[$key])){
+                $type = $field["advanced-type"] ?? "equal";
+                
+                if(($type) == "date-range"){
+                    $dates = explode(" - ", $advanced[$key]);
+                    
+                    $search = $search->whereRaw(($field["custom-filter"] ?? "`".$key."`")." BETWEEN ? AND ?", [$dates[0], $dates[1] ?? $dates[0]]);
+                }
+                else if(($type) == "in-array"){
+                    $multi_filter = [];
+                    
+                    foreach($advanced[$key] as $value){
+                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$value."%'";
+                    }
+                    
+                    $search = $search->whereRaw("(".implode(" ".($advanced["filter_operators"][$key] ?? "AND")." ", $multi_filter).")");
+                }
+                else if(($type) == "like"){
+                    $search = $search->whereRaw("CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE '%".$advanced[$key]."%'");
+                }
+                else{
+                    $multi_filter = [];
+                    $multifilter_values = [];
+                    
+                    foreach($advanced[$key] as $value){
+                        $multi_filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') = ?";
+                        $multifilter_values[] = $value;
+                    }
+                    
+                    $search = $search->whereRaw("(".implode(" OR ", $multi_filter).")", $multifilter_values);
+                }
+            }
+            
+            if(!empty($field["filter"]) && !empty($query)){
+                $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE ?";
+                $filter_values[] = "%".$query."%";
+            }
+        }
+        
+        if(!empty($filter)){
+            $search = $search->whereRaw("(".implode(" OR ", $filter).")", $filter_values);
         }
         
         return $search;
