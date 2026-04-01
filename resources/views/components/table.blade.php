@@ -84,8 +84,8 @@
     <div class="col-md-{{$size ?? 8}} overflow-hidden">
         <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 mb-0 overflow-hidden">
             {{-- Table header --}}
-            <thead class="table-dark">
-                <tr>
+            <thead>
+                <tr class="table-dark">
                     <th colspan="100%">
                         <div class="container-fluid px-0">
                             <div class="row">
@@ -283,11 +283,6 @@
 
 <style>
     .table{
-        td, th{
-            background: white;
-            position: relative;
-        }
-        
         &.table-fit{
             td, th{
                 
@@ -296,6 +291,12 @@
                     padding-right: 20px;
                     white-space: nowrap;
                 }
+            }
+        }
+        
+        tr:not(.table-dark){
+            td, th{
+                --bs-table-bg: #ffffff;
             }
         }
     
