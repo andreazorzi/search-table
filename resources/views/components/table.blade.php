@@ -126,7 +126,7 @@
                 @fragment("search-table-body")
                     <tr>
                         <td class="p-0">
-                            <div class="overflow-auto" style="width: 94vw;">
+                            <div class="overflow-auto" style="width: 10px;">
                                 <table class="table table-hover table-striped table-fit mb-0">
                                     {{-- <tr>
                                         <td>
@@ -141,7 +141,7 @@
                                         @endforeach
                                         {{-- Primary column header --}}
                                         @if (method_exists($model, "getTableActions") && count($model->getTableActions($model_plural, $model->{$model_key})) > 0)
-                                            <th class="text-end">Gestisci</th>
+                                            <th class="text-end sticky-end">Gestisci</th>
                                         @else
                                             <th></th>
                                         @endif
@@ -156,7 +156,7 @@
                                             @endforeach
                                             @if (method_exists($model, "getTableActions") && count($model_obj->getTableActions($model_plural, $model->{$model_key})) > 0)
                                                 {{-- Model edit button --}}
-                                                <td class="text-end text-nowrap">
+                                                <td class="text-end text-nowrap sticky-end">
                                                     @foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
                                                         @continue(is_null($action))
                                                         @isset($action["url"])
@@ -175,6 +175,7 @@
                                             @endif
                                         </tr>
                                     @endforeach
+                                    
                                     {{-- Table totals row --}}
                                     @if (!$disabletotalrow)
                                         <tr class="table-dark">
@@ -200,7 +201,7 @@
                                                 $count_query = clone($count);
                                                 $total_rows = $count_query->count();
                                             @endphp
-                                            <th class="text-end">
+                                            <th class="text-end sticky-end">
                                                 {{$total_rows}}
                                             </th>
                                         </tr>
@@ -263,22 +264,61 @@
         }
     }, false);
     
+    function setTableSize(){
+        $(".{{$model_plural}}-table div.overflow-auto").css("width", "10px");
+        
+        setTimeout(() => {
+            $(".{{$model_plural}}-table div.overflow-auto").css("width", ($(".{{$model_plural}}-table thead").outerWidth())+"px");
+        }, 20);
+    }
+    
     document.addEventListener("DOMContentLoaded", function() {
-        $(".{{$model_plural}}-table div.overflow-auto").css("width", ($(".{{$model_plural}}-table thead").outerWidth() - 1)+"px");
+        setTableSize();
+        
+        $(window).resize(function(){
+            setTableSize();
+        });
     });
 </script>
 
 <style>
-    .table-fit{
+    .table{
         td, th{
+            background: white;
+            position: relative;
+        }
+        
+        &.table-fit{
+            td, th{
+                
+                &:not(:last-child){
+                    width: 1%;
+                    padding-right: 20px;
+                    white-space: nowrap;
+                }
+            }
+        }
+    
+        .sticky-end{
+            position: sticky;
+            right: 0;
             
-            &:not(:last-child){
-                width: 1%;
-                padding-right: 20px;
-                white-space: nowrap;
+            &::before{
+                content: "";
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                /* background: {{$color ?? "#e0e0e0"}}; */
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                pointer-events: none;
             }
         }
     }
+    
+    
     
     @isset($color)
         .table-dark{
