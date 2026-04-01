@@ -81,7 +81,7 @@
     </div>
 @endif
 <div class="row justify-content-center mt-3">
-    <div class="col-md-{{$size ?? 8}} overflow-hidden">
+    <div id="table-container" class="col-md-{{$size ?? 8}} overflow-hidden">
         <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 mb-0 overflow-hidden">
             {{-- Table header --}}
             <thead>
@@ -265,7 +265,7 @@
     }, false);
     
     function setTableSize(){
-        $(".{{$model_plural}}-table div.overflow-auto").css("width", "10px");
+        $(".{{$model_plural}}-table div.overflow-auto").css("width", ($("#table-container").innerWidth() - 40)+"px");
         
         setTimeout(() => {
             $(".{{$model_plural}}-table div.overflow-auto").css("width", ($(".{{$model_plural}}-table thead").outerWidth())+"px");
