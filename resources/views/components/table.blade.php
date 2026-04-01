@@ -79,140 +79,134 @@
     </div>
 @endif
 <div class="row justify-content-center mt-3">
-    <div class="col-md-{{$size ?? 8}}">
-        <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}}">
+    <div class="col-md-{{$size ?? 8}} overflow-hidden">
+        <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 mb-0 overflow-hidden">
             {{-- Table header --}}
             <thead class="table-dark">
-                @if (!($disablesearchbar ?? false) || !($disableaddbutton ?? false))
-                    <tr>
-                        <th colspan="100%">
-                            <div class="container-fluid px-0">
-                                <div class="row">
-                                    @empty($disablesearchbar)
-                                        {{-- Filter input --}}
-                                        <div class="col align-self-center">
-                                            <input type="text" id="filter" name="filter" class="form-control p-1" value="{{$query}}" placeholder="Cerca" 
-                                                hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search']"
-                                                hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
-                                                >
-                                        </div>
-                                    @endempty
-                                    
-                                    {{-- Add new button --}}
-                                    @empty($disableaddbutton)
-                                        <div class="col-{{$disablesearchbar ? "12" : "auto"}} py-2 ps-0 text-end">
-                                            @if(!empty($addRedirect))
-                                                <a href="{{$addRedirect}}" class="text-white">
-                                                    <i role="button" class="add-new fa-solid fa-plus pe-2"></i>
-                                                </a>
-                                            @else
-                                                <i role="button" id="add-new-{{$model_name}}" class="add-new fa-solid fa-plus pe-2"
-                                                    data-bs-target="#modal" data-bs-toggle="modal"
-                                                    hx-get="{{route($model_plural.".create", [])}}" hx-target="#modal .modal-content"
-                                                    hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
-                                                    ></i>
-                                            @endif
-                                        </div>
-                                    @endempty
-                                </div>
-                            </div>
-                        </th>
-                    </tr>
-                @endif
                 <tr>
-                    {{-- Fields header --}}
-                    @foreach ($fields as $key => $field)
-                        @continue($field["hidden"] ?? false)
-                        <th>{{$field["custom-label"] ?? Str::ucfirst(__("validation.attributes.".$key))}}</th>
-                    @endforeach
-                    
-                    {{-- Primary column header --}}
-                    @if (method_exists($model, "getTableActions") && count($model->getTableActions($model_plural, $model->{$model_key})) > 0)
-                        <th class="text-end">Gestisci</th>
-                    @else
-                        <th></th>
-                    @endif
-                </tr>
-            </thead>
-            
-            {{-- Table body --}}
-            <tbody id="{{$model_plural}}-table-data">
-                @fragment("search-table-body")
-                    
-                    {{-- <tr>
-                        <td>
-                            @dump($search->dumpRawSql())
-                        </td>
-                    </tr> --}}
-                    
-                    {{-- Loop trough results --}}
-                    @foreach ($search->paginate($limit, ['*'], 'page', $page) as $model_obj)
-                        <tr data-id="{{($model_obj->{$model_key})}}">
-                            {{-- Model fields --}}
-                            @foreach ($fields as $key => $field)
-                                @continue($field["hidden"] ?? false)
-                                <td>{!!(!empty($field["custom-value"]) ? $model_obj->{$field["custom-value"]}() : $model_obj->{$key})!!}</td>
-                            @endforeach
-                            
-                            @if (method_exists($model, "getTableActions") && count($model_obj->getTableActions($model_plural, $model->{$model_key})) > 0)
-                                {{-- Model edit button --}}
-                                <td class="text-end text-nowrap">
-                                    @foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
-                                        @continue(is_null($action))
-                                        @isset($action["url"])
-                                            <a href="{{$action["url"]}}" class="d-inline-block ms-3 text-decoration-none text-black" {!!$action["attributes"] ?? ""!!}>
-                                                {!!$action["content"]!!}
+                    <th colspan="100%">
+                        <div class="container-fluid px-0">
+                            <div class="row">
+                                @empty($disablesearchbar)
+                                    {{-- Filter input --}}
+                                    <div class="col align-self-center">
+                                        <input type="text" id="filter" name="filter" class="form-control p-1" value="{{$query}}" placeholder="Cerca" 
+                                            hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search']"
+                                            hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
+                                            >
+                                    </div>
+                                @endempty
+                                
+                                {{-- Add new button --}}
+                                @empty($disableaddbutton)
+                                    <div class="col-{{$disablesearchbar ? "12" : "auto"}} py-2 ps-0 text-end">
+                                        @if(!empty($addRedirect))
+                                            <a href="{{$addRedirect}}" class="text-white">
+                                                <i role="button" class="add-new fa-solid fa-plus pe-2"></i>
                                             </a>
                                         @else
-                                            <span class="d-inline-block ms-3" title="{{$action["title"] ?? ""}}" {!!$action["attributes"]!!} role="button">
-                                                {!!$action["content"]!!}
-                                            </span>
-                                        @endisset
+                                            <i role="button" id="add-new-{{$model_name}}" class="add-new fa-solid fa-plus pe-2"
+                                                data-bs-target="#modal" data-bs-toggle="modal"
+                                                hx-get="{{route($model_plural.".create", [])}}" hx-target="#modal .modal-content"
+                                                hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
+                                                ></i>
+                                        @endif
+                                    </div>
+                                @endempty
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+        
+            {{-- Table body --}}
+            <tbody id="{{$model_plural}}-table-data" class="d-block overflow-hidden">
+                @fragment("search-table-body")
+                    <tr>
+                        <td class="p-0">
+                            <div class="overflow-auto" style="width: 94vw;">
+                                <table class="table table-hover table-striped table-fit mb-0">
+                                    {{-- <tr>
+                                        <td>
+                                            @dump($search->dumpRawSql())
+                                        </td>
+                                    </tr> --}}
+                                    <tr class="table-dark">
+                                        {{-- Fields header --}}
+                                        @foreach ($fields as $key => $field)
+                                            @continue($field["hidden"] ?? false)
+                                            <th>{{$field["custom-label"] ?? Str::ucfirst(__("validation.attributes.".$key))}}</th>
+                                        @endforeach
+                                        {{-- Primary column header --}}
+                                        @if (method_exists($model, "getTableActions") && count($model->getTableActions($model_plural, $model->{$model_key})) > 0)
+                                            <th class="text-end">Gestisci</th>
+                                        @else
+                                            <th></th>
+                                        @endif
+                                    </tr>
+                                    {{-- Loop trough results --}}
+                                    @foreach ($search->paginate($limit, ['*'], 'page', $page) as $model_obj)
+                                        <tr class="" data-id="{{($model_obj->{$model_key})}}">
+                                            {{-- Model fields --}}
+                                            @foreach ($fields as $key => $field)
+                                                @continue($field["hidden"] ?? false)
+                                                <td>{!!(!empty($field["custom-value"]) ? $model_obj->{$field["custom-value"]}() : $model_obj->{$key})!!}</td>
+                                            @endforeach
+                                            @if (method_exists($model, "getTableActions") && count($model_obj->getTableActions($model_plural, $model->{$model_key})) > 0)
+                                                {{-- Model edit button --}}
+                                                <td class="text-end text-nowrap">
+                                                    @foreach ($model_obj->getTableActions($model_plural, $model_obj->{$model_key}) as $action)
+                                                        @continue(is_null($action))
+                                                        @isset($action["url"])
+                                                            <a href="{{$action["url"]}}" class="d-inline-block ms-3 text-decoration-none text-black" {!!$action["attributes"] ?? ""!!}>
+                                                                {!!$action["content"]!!}
+                                                            </a>
+                                                        @else
+                                                            <span class="d-inline-block ms-3" title="{{$action["title"] ?? ""}}" {!!$action["attributes"]!!} role="button">
+                                                                {!!$action["content"]!!}
+                                                            </span>
+                                                        @endisset
+                                                    @endforeach
+                                                </td>
+                                            @else
+                                                <td></td>
+                                            @endif
+                                        </tr>
                                     @endforeach
-                                </td>
-                            @else
-                                <td></td>
-                            @endif
-                        </tr>
-                    @endforeach
-                    
-                    {{-- Table totals row --}}
-                    @if (!$disabletotalrow)
-                        <tr class="table-dark">
-                            {{-- Fields totals --}}
-                            @foreach ($fields as $key => $field)
-                                @continue($field["hidden"] ?? false)
-                                
-                                @php
-                                    $sum = "";
-                                    
-                                    if($field["sum"] ?? false) {
-                                        $sum_query = clone($count);
-                                        
-                                        $sum = $sum_query->sum($key);
-                                        
-                                        if($field["sum"] == "currency"){
-                                            $sum = number_format($sum, 2, ",", ".")." €";
-                                        }
-                                    }
-                                @endphp
-                                <th class="text-{{($field["align"] ?? null) == "right" ? "end" : "start"}}">
-                                    {{$sum}}
-                                </th>
-                            @endforeach
-                            
-                            {{-- Row count --}}
-                            @php
-                                $count_query = clone($count);
-                                $total_rows = $count_query->count();
-                            @endphp
-                            <th class="text-end">
-                                {{$total_rows}}
-                            </th>
-                        </tr>
-                    @endif
-                    
-                    {{-- Pagination --}}
+                                    {{-- Table totals row --}}
+                                    @if (!$disabletotalrow)
+                                        <tr class="table-dark">
+                                            {{-- Fields totals --}}
+                                            @foreach ($fields as $key => $field)
+                                                @continue($field["hidden"] ?? false)
+                                                @php
+                                                    $sum = "";
+                                                    if($field["sum"] ?? false) {
+                                                        $sum_query = clone($count);
+                                                        $sum = $sum_query->sum($key);
+                                                        if($field["sum"] == "currency"){
+                                                            $sum = number_format($sum, 2, ",", ".")." €";
+                                                        }
+                                                    }
+                                                @endphp
+                                                <th class="text-{{($field["align"] ?? null) == "right" ? "end" : "start"}}">
+                                                    {{$sum}}
+                                                </th>
+                                            @endforeach
+                                            {{-- Row count --}}
+                                            @php
+                                                $count_query = clone($count);
+                                                $total_rows = $count_query->count();
+                                            @endphp
+                                            <th class="text-end">
+                                                {{$total_rows}}
+                                            </th>
+                                        </tr>
+                                    @endif
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
                     <tr class="table-dark">
                         <td class="text-center" colspan="100%">
                             <div class="row">
@@ -266,6 +260,10 @@
             }
         }
     }, false);
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        $(".{{$model_plural}}-table div.overflow-auto").css("width", ($(".{{$model_plural}}-table thead").outerWidth() - 1)+"px");
+    });
 </script>
 
 <style>
