@@ -21,6 +21,7 @@
     $showadvancefilters ??= false;
     $fit ??= false;
     $color ??= null;
+    $nomargintop ??= false;
     
     // Get model primary key
     $model_key = $model::getModelKey();
@@ -45,7 +46,7 @@
 </div> --}}
 {{-- <x-search-table-filters.$model_plural-filters /> --}}
 @if(!empty($showadvancefilters))
-    <div class="row justify-content-center">
+    <div class="row justify-content-center {{!$nomargintop ? "mt-3" : ""}}">
         <div class="col-md-{{$size ?? 8}}">
             @if($showadvancefilters !== "offcanvas")
                 <div class="text-end">
