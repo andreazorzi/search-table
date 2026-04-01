@@ -82,7 +82,7 @@
 @endif
 <div class="row justify-content-center mt-3">
     <div id="table-container" class="col-md-{{$size ?? 8}} overflow-hidden">
-        <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 mb-0 overflow-hidden">
+        <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 overflow-hidden">
             {{-- Table header --}}
             <thead>
                 <tr class="table-dark">
