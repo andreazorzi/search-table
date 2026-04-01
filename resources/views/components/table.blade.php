@@ -20,6 +20,7 @@
     $disabletotalrow ??= false;
     $showadvancefilters ??= false;
     $fit ??= false;
+    $color ??= null;
     
     // Get model primary key
     $model_key = $model::getModelKey();
@@ -277,4 +278,16 @@
             }
         }
     }
+    
+    @isset($color)
+        .table-dark{
+            --bs-table-bg: {{$color}} !important;
+            --bs-table-border-color: {{$color}} !important;
+            
+            & *{
+                --bs-table-accent-bg: {{$color}} !important;
+            }
+        }
+    
+    @endisset
 </style>
