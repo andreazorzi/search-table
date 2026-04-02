@@ -82,6 +82,7 @@
 @endif
 <div class="row justify-content-center mt-3">
     <div id="table-container" class="col-md-{{$size ?? 8}} overflow-hidden">
+        <div class="ruler"></div>
         <table class="{{$model_plural}}-table table-search table table-hover table-striped {{$fit ? "table-fit" : ""}} rounded-4 overflow-hidden">
             {{-- Table header --}}
             <thead>
@@ -122,11 +123,11 @@
             </thead>
         
             {{-- Table body --}}
-            <tbody id="{{$model_plural}}-table-data" class="d-block overflow-hidden">
+            <tbody id="{{$model_plural}}-table-data" class="overflow-hidden">
                 @fragment("search-table-body")
                     <tr>
                         <td class="p-0">
-                            <div class="overflow-auto" style="width: 10px;">
+                            <div class="overflow-auto">
                                 <table class="table table-hover table-striped table-fit mb-0">
                                     {{-- <tr>
                                         <td>
@@ -235,6 +236,11 @@
                             </div>
                         </td>
                     </tr>
+                    @isset ($fragment)
+                        <script>
+                            setTableSize();
+                        </script>
+                    @endisset
                 @endfragment
             </tbody>
         </table>
@@ -265,10 +271,8 @@
     }, false);
     
     function setTableSize(){
-        $(".{{$model_plural}}-table div.overflow-auto").css("width", ($("#table-container").innerWidth() - 40)+"px");
-        
         setTimeout(() => {
-            $(".{{$model_plural}}-table div.overflow-auto").css("width", ($(".{{$model_plural}}-table thead").outerWidth())+"px");
+            $(".{{$model_plural}}-table div.overflow-auto").css("width", ($("#table-container .ruler").innerWidth())+"px");
         }, 20);
     }
     
