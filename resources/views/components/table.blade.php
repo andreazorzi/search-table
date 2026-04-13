@@ -334,6 +334,14 @@
                 --bs-table-accent-bg: {{$color}} !important;
             }
         }
-    
+    @else
+        .table-dark{
+            --bs-table-bg: #212529 !important;
+            --bs-table-border-color: #212529 !important;
+            
+            & *{
+                --bs-table-accent-bg: #212529 !important;
+            }
+        }
     @endisset
 </style>
