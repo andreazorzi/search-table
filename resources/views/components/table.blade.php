@@ -286,7 +286,7 @@
 </script>
 
 <style>
-    .table{
+    .{{$model_plural}}-table{
         &.table-fit{
             td, th{
                 
@@ -326,7 +326,7 @@
     
     
     @isset($color)
-        .table-dark{
+        .{{$model_plural}}-table.table-dark{
             --bs-table-bg: {{$color}} !important;
             --bs-table-border-color: {{$color}} !important;
             
@@ -335,7 +335,7 @@
             }
         }
     @else
-        .table-dark{
+        .{{$model_plural}}-table.table-dark{
             --bs-table-bg: #212529 !important;
             --bs-table-border-color: #212529 !important;
             
