@@ -299,7 +299,7 @@
         }
         
         tr:not(.table-dark){
-            td, th{
+            & > :is(td, th){
                 --bs-table-bg: #ffffff;
             }
         }
