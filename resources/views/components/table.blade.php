@@ -19,6 +19,7 @@
     $disablesearchbar ??= false;
     $disabletotalrow ??= false;
     $showadvancefilters ??= false;
+    $showexport ??= false;
     $fit ??= false;
     $color ??= null;
     $nomargintop ??= false;
@@ -45,38 +46,54 @@
     </div>
 </div> --}}
 {{-- <x-search-table-filters.$model_plural-filters /> --}}
-@if(!empty($showadvancefilters))
+@if(!empty($showexport) || !empty($showadvancefilters))
     <div class="row justify-content-center {{!$nomargintop ? "mt-3" : ""}}">
         <div class="col-md-{{$size ?? 8}}">
-            @if($showadvancefilters !== "offcanvas")
-                <div class="text-end">
-                    <button class="btn btn-primary btn-sm" onclick="$('#advanced-search').toggleClass('d-none')">
-                        <i class="fa-brands fa-searchengin"></i>
-                        {{__('search-table::search-table.advanced_search')}}
+        <div class="row g-3">
+            @if(!empty($showexport))
+                <div class="col">
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#export-modal"
+                        hx-get="{{route($model_plural.'.export', [])}}" hx-target="#request-response" hx-include=".table-filters *" hx-swap="none" hx-on::after-request="downloadBase64File(event)" hx-disabled-elt="this"
+                    >
+                        <i class="fa-solid fa-file-excel"></i>
+                        {{__('search-table::search-table.export')}}
                     </button>
-                </div>
-                <div id="advanced-search" class="row gy-2 d-none">
-                    @include("components.search-table-filters.$model_plural-filters")
-                </div>
-            @else
-                <div class="text-end">
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#filters" role="button" aria-controls="filters">
-                        <i class="fa-brands fa-searchengin"></i>
-                        {{__('search-table::search-table.advanced_search')}}
-                    </button>
-                </div>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="filters" aria-labelledby="filtersLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="filtersLabel">Filtri</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filters" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <div class="row g-3">
-                            @include("components.search-table-filters.$model_plural-filters")
-                        </div>
-                    </div>
                 </div>
             @endif
+            @if(!empty($showadvancefilters))
+                <div class="col table-filters">
+                    @if($showadvancefilters !== "offcanvas")
+                        <div class="text-end">
+                            <button class="btn btn-primary btn-sm" onclick="$('#advanced-search').toggleClass('d-none')">
+                                <i class="fa-brands fa-searchengin"></i>
+                                {{__('search-table::search-table.advanced_search')}}
+                            </button>
+                        </div>
+                        <div id="advanced-search" class="row gy-2 d-none">
+                            @include("components.search-table-filters.$model_plural-filters")
+                        </div>
+                    @else
+                        <div class="text-end">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#filters" role="button" aria-controls="filters">
+                                <i class="fa-brands fa-searchengin"></i>
+                                {{__('search-table::search-table.advanced_search')}}
+                            </button>
+                        </div>
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="filters" aria-labelledby="filtersLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="filtersLabel">Filtri</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filters" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <div class="row g-3">
+                                    @include("components.search-table-filters.$model_plural-filters")
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endif
+        </div>
         </div>
     </div>
 @endif
