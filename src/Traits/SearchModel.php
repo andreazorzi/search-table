@@ -28,8 +28,20 @@ trait SearchModel
         $search = self::query();
         
         // Check model filter
-        foreach($modelfilter as $key => $value){
-            $search = $search->whereRaw("CONVERT(".($fields[$key]["custom-filter"] ?? $fields[$key]["key"] ?? "`".$key."`")." using 'utf8') = ?", $value);
+        foreach($modelfilter as $key => $values){
+            if(!is_array($values)){
+                $values = [$values];
+            }
+            
+            $multi_filter = [];
+            $multifilter_values = [];
+            
+            foreach($values as $value){
+                $multi_filter[] = "CONVERT(".($fields[$key]["custom-filter"] ?? $fields[$key]["key"] ?? "`".$key."`")." using 'utf8') = ?";
+                $multifilter_values[] = $value;
+            }
+            
+            $search = $search->whereRaw("(".implode(" OR ", $multi_filter).")", $multifilter_values);
         }
         
         foreach($fields as $key => $field){
