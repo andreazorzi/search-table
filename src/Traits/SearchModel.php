@@ -55,7 +55,18 @@ trait SearchModel
                 if(($type) == "date-range"){
                     $dates = explode(" - ", $advanced[$key]);
                     
-                    $search = $search->whereRaw(($field["custom-filter"] ?? "`".$key."`")." BETWEEN ? AND ?", [$dates[0], $dates[1] ?? $dates[0]]);
+                    $from = $dates[0];
+                    $to = $dates[1] ?? $dates[0];
+                    
+                    if (!preg_match('/\d{1,2}:\d{2}/', $from)) {
+                        $from .= " 00:00:00";
+                    }
+
+                    if (!preg_match('/\d{1,2}:\d{2}/', $to)) {
+                        $to .= " 23:59:59";
+                    }
+                    
+                    $search = $search->whereRaw(($field["custom-filter"] ?? "`".$key."`")." BETWEEN ? AND ?", [$from, $to]);
                 }
                 else if(($type) == "in-array"){
                     $multi_filter = [];
