@@ -1,5 +1,6 @@
 @php
-    use App\Classes\Help;
+use App\Classes\Help;
+use Illuminate\Support\Facades\Crypt;
     
     // Get modal single and plural names
     $model_name = Str::kebab(class_basename($model));
@@ -39,6 +40,9 @@
     
     // Clone search for count rows
     $count = clone($search);
+    
+    // Encript model filters
+    $modelfilter = Crypt::encryptString(json_encode($modelfilter));
 @endphp
 {{-- <div class="row">
     <div class="col-md-12">

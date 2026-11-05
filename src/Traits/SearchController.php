@@ -2,8 +2,9 @@
 
 namespace SearchTable\Traits;
 
-use SearchTable\Classes\Help;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use SearchTable\Classes\Help;
 
 trait SearchController
 {
@@ -16,6 +17,12 @@ trait SearchController
     }
     
     private static function search_table(Request $request, $model){
+        try {
+            $modelfilter = Crypt::decryptString($request->modelfilter);
+        } catch (\Throwable $th) {
+            abort(400, __('search-table::search-table.model_filter_tampered'));
+        }
+        
         return Help::fragment("search-table::components.table", "search-table-body", [
             "model" => $model,
             "query" => $request->filter,
@@ -23,7 +30,7 @@ trait SearchController
             "page" => $request->page ?? 1,
             "limit" => $request->limit ?? null,
             "addRedirect" => $request->addRedirect ?? null,
-            "modelfilter" => json_decode($request->modelfilter ?? "[]"),
+            "modelfilter" => json_decode($modelfilter),
             "disableaddbutton" => $request->boolean("disableaddbutton") ?? false,
             "disablesearchbar" => $request->boolean("disablesearchbar") ?? false,
             "disabletotalrow" => $request->boolean("disabletotalrow") ?? false,
