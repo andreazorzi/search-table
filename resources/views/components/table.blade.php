@@ -57,7 +57,8 @@ use Illuminate\Support\Facades\Crypt;
             @if(!empty($showexport))
                 <div class="col">
                     <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#export-modal"
-                        hx-get="{{route($model_plural.'.export', [])}}" hx-target="#request-response" hx-include=".table-filters *" hx-swap="none" hx-on::after-request="downloadBase64File(event)" hx-disabled-elt="this"
+                        hx-get="{{route($model_plural.'.export', [])}}" hx-target="#request-response" hx-include=".table-filters *, .table-search #filter" hx-swap="none" hx-on::after-request="downloadBase64File(event)" hx-disabled-elt="this"
+                        hx-vals='{{json_encode(["modelfilter" => $modelfilter])}}'
                     >
                         <i class="fa-solid fa-file-excel"></i>
                         {{__('search-table::search-table.export')}}
