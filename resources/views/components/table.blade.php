@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Crypt;
     $disabletotalrow ??= false;
     $showadvancefilters ??= false;
     $showexport ??= false;
+    $sortable ??= request()->sortable ?? false;
+    $sort = request()->sort ?? [];
     $fit ??= false;
     $color ??= null;
     $nomargintop ??= false;
@@ -36,13 +38,21 @@ use Illuminate\Support\Facades\Crypt;
         "query" => $query,
         "advanced_search" => $advanced,
         "modelfilter" => $modelfilter,
+        "sort" => $sort
     ], true);
     
     // Clone search for count rows
     $count = clone($search);
     
-    // Encript model filters
-    $modelfilter = Crypt::encryptString(json_encode($modelfilter));
+    $table_settings = [
+        "modelfilter" => Crypt::encryptString(json_encode($modelfilter)),
+        "sortable" => $sortable,
+        "disableaddbutton" => $disableaddbutton,
+        "addRedirect" => $addRedirect ?? null,
+        "disablesearchbar" => $disablesearchbar,
+        "disabletotalrow" => $disabletotalrow,
+        "limit" => $limit
+    ];
 @endphp
 {{-- <div class="row">
     <div class="col-md-12">
@@ -116,8 +126,8 @@ use Illuminate\Support\Facades\Crypt;
                                     {{-- Filter input --}}
                                     <div class="col align-self-center">
                                         <input type="text" id="filter" name="filter" class="form-control p-1" value="{{$query}}" placeholder="Cerca" 
-                                            hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search']"
-                                            hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
+                                            hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed" hx-target="#{{$model_plural}}-table-data" hx-include="[name^='advanced_search'], .table-search .sort input[type='hidden']"
+                                            hx-vals='{{json_encode($table_settings)}}'
                                             >
                                     </div>
                                 @endempty
@@ -133,7 +143,7 @@ use Illuminate\Support\Facades\Crypt;
                                             <i role="button" id="add-new-{{$model_name}}" class="add-new fa-solid fa-plus pe-2"
                                                 data-bs-target="#modal" data-bs-toggle="modal"
                                                 hx-get="{{route($model_plural.".create", [])}}" hx-target="#modal .modal-content"
-                                                hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
+                                                hx-vals='{{json_encode($table_settings)}}'
                                                 ></i>
                                         @endif
                                     </div>
@@ -160,7 +170,20 @@ use Illuminate\Support\Facades\Crypt;
                                         {{-- Fields header --}}
                                         @foreach ($fields as $key => $field)
                                             @continue($field["hidden"] ?? false)
-                                            <th>{{$field["custom-label"] ?? Str::ucfirst(__("validation.attributes.".$key))}}</th>
+                                            <th
+                                                @if($sortable)
+                                                    role="button" class="sort user-select-none" data-column="{{$key}}"
+                                                @endif
+                                            >
+                                                @if($sortable)
+                                                    @php
+                                                        $icons = ["asc" => "fa-sort-up", "desc" => "fa-sort-down"];
+                                                    @endphp
+                                                    <i class="fa-solid {{$icons[$sort[$key] ?? ""] ?? "fa-sort"}} fa-fw"></i>
+                                                    <input type="hidden" name="sort[{{$key}}]" value="{{$sort[$key] ?? ""}}">
+                                                @endif
+                                                {{$field["custom-label"] ?? Str::ucfirst(__("validation.attributes.".$key))}}
+                                            </th>
                                         @endforeach
                                         {{-- Primary column header --}}
                                         @if (method_exists($model, "getTableActions") && count($model->getTableActions($model_plural, $model->{$model_key})) > 0)
@@ -244,8 +267,8 @@ use Illuminate\Support\Facades\Crypt;
                                 <div class="col-auto align-self-center">
                                     <input type="hidden" name="advanced_search[blank]" value="">
                                     <input type="text" id="page" name="page" class="table-page" value="{{$page}}"
-                                        hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed, change" hx-target="#{{$model_plural}}-table-data" hx-include="[name='filter'],[name^='advanced_search']"
-                                        hx-vals='{{json_encode(["modelfilter" => $modelfilter, "disableaddbutton" => $disableaddbutton, "addRedirect" => $addRedirect ?? null, "disablesearchbar" => $disablesearchbar, "disabletotalrow" => $disabletotalrow, "limit" => $limit])}}'
+                                        hx-get="{{route($model_plural.'.index')}}" hx-trigger="keyup changed, change" hx-target="#{{$model_plural}}-table-data" hx-include="[name='filter'],[name^='advanced_search'], .table-search .sort input[type='hidden']"
+                                        hx-vals='{{json_encode($table_settings)}}'
                                         >
                                     /
                                     <span id="last-page">{{ceil($count->count() / $limit)}}</span>
@@ -285,6 +308,23 @@ use Illuminate\Support\Facades\Crypt;
                 }
                 
                 $("#page").val(current_page);
+                htmx.trigger("#page", "change");
+                
+                break;
+            }
+            else if(el.matches('.sort')){
+                let column = $(el).attr("data-column");
+                $(".sort:not([data-column='"+column+"']) input[type='hidden']").val("");
+                
+                let current_sort = $(el).find("input").val();
+                let next_sort = {
+                    "": "asc",
+                    "asc": "desc",
+                    "desc": "",
+                };
+                
+                $("#page").val(1);
+                $(el).find("input").val(next_sort[current_sort]);
                 htmx.trigger("#page", "change");
                 
                 break;

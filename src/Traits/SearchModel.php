@@ -27,6 +27,8 @@ trait SearchModel
         
         $search = self::query();
         
+        $sort_fields = [];
+        
         // Check model filter
         foreach($modelfilter as $key => $values){
             if(!is_array($values)){
@@ -46,7 +48,7 @@ trait SearchModel
         
         foreach($fields as $key => $field){
             if(!empty($field["sort"])){
-                $search = $search->orderByRaw(($field["custom-filter"] ?? "`".$key."`")." ".$field["sort"]);
+                $sort_fields[$key] = $field["sort"];
             }
                 
             if(!empty($advanced[$key])){
@@ -97,6 +99,12 @@ trait SearchModel
                 $filter[] = "CONVERT(".($field["custom-filter"] ?? "`".$key."`")." using 'utf8') LIKE ?";
                 $filter_values[] = "%".$query."%";
             }
+        }
+        
+        foreach(!empty($filters["sort"] ?? []) ? $filters["sort"] : $sort_fields as $key => $value){
+            if(empty($value)) continue;
+            
+            $search = $search->orderByRaw(($fields[$key]["custom-filter"] ?? "`".$key."`")." ".$value);
         }
         
         if(!empty($filter)){
